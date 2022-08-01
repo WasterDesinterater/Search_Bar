@@ -1,2 +1,118 @@
+def Edit_Dist(s,t):
+    mem={}
+    def mem_AEdit(mem,s,t):
+        if (s,t) in mem:
+            return mem[(s,t)]
+        else:
+            if s=="":
+                return len(t)
+            if t=="":
+                return len(s)
+            if s[0]==t[0]:
+                return mem_AEdit(mem,s[1:],t[1:])
+            a= 1+mem_AEdit(mem,s[1:],t)
+            mem[(s[1:],t)]=a
+
+            b= 1+mem_AEdit(mem,s[1:],t[1:])
+            mem[(s[1:],t[1:])]=b
+
+            c= 1+mem_AEdit(mem,t[0]+s,t)
+            mem[(s,t[1:])]=c
+        return min(a,b,c)
+    return mem_AEdit(mem,s,t)
+
+def binary_search_mod(list,item):
+    Edit=0
+    start=0
+    end=(len(list)-1)
+    while start!=end:
+        mid=(start+end)//2
+        if list[mid][0]<item:
+            Edit=Edit_Dist(item,list[mid][0])
+            if Edit<4:
+                return list[mid][1]
+            start=mid+1
+        elif list[mid][0]>item:
+            Edit=Edit_Dist(item,list[mid][0])
+            if Edit<4:
+                return list[mid][1]
+            end=mid
+        else:
+            return list[mid][1]
+    return []
+
+def list_string(s,strs=''):
+    if s=="":
+        return [strs]
+    elif s[0]==" ":
+        return [strs]+list_string(s[1:],strs="")
+    else:
+        strs+=s[0]
+        return list_string(s[1:],strs)
+        
+def crash(exe):
+    exe=sorted(exe)
+    types=0
+    pieces={
+        "1":[]}
+    c=1
+    for seg in range(len(exe)):
+        if exe[seg] not in pieces["1"]:
+            pieces["1"]+=[exe[seg]]
+            types=exe[seg]
+           
+            if c>1:
+                if f"{c}" in pieces:
+                    pieces[f"{c}"]+=[exe[seg-1]]
+                    pieces[f"1"].pop(len(pieces["1"])-2)
+                    c=1
+                else:
+                    pieces[f"{c}"]=[exe[seg-1]]
+                    pieces[f"1"].pop(len(pieces["1"])-2)
+                    c=1
+        else:
+            if exe[seg]==types:
+                c+=1
+    if c>1:
+        if f"{c}" in pieces:
+            pieces[f"{c}"]+=[exe[seg-1]]
+            pieces[f"1"].pop(-1)
+            c=1
+        else:
+            pieces[f"{c}"]=[exe[seg-1]]
+            pieces[f"1"].pop(-1)
+            c=1
+
+    return pieces[max(pieces)]
+        
 def python_search():
+    lsts=[]
+    accept=input()
+    accept=accept.lower()
+    accept_copy=list_string(accept)
+    for part in accept_copy:
+        lsts.extend(binary_search_mod(list(index.items()),part))
+    if lsts==[]:
+        return f"Sorry, after digging around no item named {accept} is found around here"
+    result=crash(lsts)
+    return(result)
+    
+    
+index={
+    "black":[],
+    "blue":[],
+    "green":[],
+    "grey":[],
+    "orange":[],
+    "red":[],
+    "white":[],
+    "yellow":[],
+    "check":[],
+    
+}
+
+while True:
+    print(python_search())
+    
+
 
