@@ -86,33 +86,20 @@ def crash(exe):
     return pieces[max(pieces)]
         
 def python_search():
+    result=[]
     lsts=[]
     accept=input()
     accept=accept.lower()
-    accept_copy=list_string(accept)
-    for part in accept_copy:
+    accept_mod=list_string(accept)
+    for part in accept_mod:
         lsts.extend(binary_search_mod(list(index.items()),part))
     if lsts==[]:
-        return f"Sorry, after digging around no item named {accept} is found around here"
+        return f"Sorry, after digging around no item named{accept}is found around here"
     result=crash(lsts)
     return(result)
     
-    
-index={
-    "black":[],
-    "blue":[],
-    "green":[],
-    "grey":[],
-    "orange":[],
-    "red":[],
-    "white":[],
-    "yellow":[],
-    "check":[],
-    
-}
-
 while True:
     print(python_search())
-    
+
 
 
