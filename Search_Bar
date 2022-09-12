@@ -1,0 +1,81 @@
+from classes import thesaurus
+def Edit_Dist(s,t):
+    mem={}
+    def mem_AEdit(mem,s,t):
+        if (s,t) in mem:
+            return mem[(s,t)]
+        else:
+            if s=="":
+                return len(t)
+            if t=="":
+                return len(s)
+            if s[0]==t[0]:
+                return mem_AEdit(mem,s[1:],t[1:])
+            a= 1+mem_AEdit(mem,s[1:],t)
+            mem[(s[1:],t)]=a
+
+            b= 1+mem_AEdit(mem,s[1:],t[1:])
+            mem[(s[1:],t[1:])]=b
+
+            c= 1+mem_AEdit(mem,t[0]+s,t)
+            mem[(s,t[1:])]=c
+        return min(a,b,c)
+    return mem_AEdit(mem,s,t)
+
+def binary_search_mod(list,item):
+    Edit=0
+    start=0
+    end=(len(list)-1)
+    while start<=end:
+        mid=(start+end)//2
+        if list[mid][0]<item:
+            Edit=Edit_Dist(item,list[mid][0])
+            if Edit<3:
+                return list[mid][1]
+            start=mid+1
+        elif list[mid][0]>item:
+            Edit=Edit_Dist(item,list[mid][0])
+            if Edit<3:
+                return list[mid][1]
+            end=mid-1
+        else:
+            return list[mid][1]
+    return []
+        
+def crash(mode):
+    cell=set()
+    max=2
+    for piece in mode:
+        count=mode.count(piece)
+        if {piece}.isdisjoint(cell) and count>=max:
+            if count>max:
+                max=count
+                cell=set()
+                cell.add(piece)
+            elif count==max:
+                cell.add(piece)
+    if len(cell)==0:
+        return list(set(mode))
+    return list(cell)
+        
+def python_search(index,accept):
+   result,lsts=[],[]
+   accept=accept.lower().split()
+   for part in accept:
+          lsts.extend(binary_search_mod(list(index.pages.items()),part))
+    if lsts==[]:
+        return None
+    return(crash(lsts))
+
+
+def search_bar(index):
+    while True:
+        accept=input("Enter a value")
+        value=python_search(index,accept)
+        if value==None:
+            print(f"Sorry, after digging around no item named {" ".join(accept)} is found around here")
+        else:
+            print(value)
+index=thesaurus()
+search_bar(index)
+
